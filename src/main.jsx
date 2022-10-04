@@ -20,36 +20,39 @@ const routes = createBrowserRouter([
 		loader: async () => {
 			const DB_NAME = 'ProductsDB';
 			const DB_TABLE = 'products';
-			const TABLE_FIELDS = ['id', 'brand', 'model', 'price', 'imgUrl'];
+			const TABLE_FIELDS = ['index', 'id', 'brand', 'model', 'price', 'imgUrl'];
 
-			if (!(await indexedDB.databases()).find((db) => db.name === DB_NAME)) {
-				try {
-					const dbObject = await openDb(DB_NAME, [DB_TABLE], [TABLE_FIELDS[0]], [TABLE_FIELDS.slice(1)]);
+			try {
+				const dbObject = await openDb(DB_NAME, [DB_TABLE], [TABLE_FIELDS[0]], [TABLE_FIELDS.slice(1)]);
 
-					const response = await fetch('https://front-test-api.herokuapp.com/api/product');
-					const json = await response.json();
+				const response = await fetch('https://front-test-api.herokuapp.com/api/product');
+				const json = await response.json();
 
-					json.forEach((resObject) => {
-						insert(
-							dbObject,
-							DB_TABLE,
-							TABLE_FIELDS,
-							TABLE_FIELDS.map((field) => resObject[field])
-						);
-					});
-				} catch (errorEvent) {
+				json.forEach((resObject, index) => {
+					insert(
+						dbObject,
+						DB_TABLE,
+						TABLE_FIELDS,
+						[index, ...TABLE_FIELDS.slice(1).map((field) => resObject[field])]
+					);
+				});
+
+				return [dbObject, DB_TABLE];
+			} catch (error) {
+				//If error contains a target, it is an error event; if not, it is the already created database
+				if(!error.target) {
+					return [error, DB_TABLE]
+				} else {
 					console.error('Error while creating and/or interacting with databse. See the error below for more information');
 					console.error(errorEvent);
 				}
 			}
-		},
-		children: [
-			{
-				path: ':id',
-				element: <ProductDetails />,
-			},
-		],
+		}
 	},
+	{
+		path: '/:id',
+		element: <ProductDetails />,
+	}
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
