@@ -2,20 +2,24 @@
  * Cretes new database
  * @param {string} dbName The name of the database to be created
  * @param {Arrray<string>} tableNames An array contianing the names of the tables to be created on the database
- * @param {Array<string>} primaryKeyPaths An array containing the names of the field which will serve as primary key for each table in sequential order
- * @param {Array<Array<string>>} fieldKeyPaths An array containing an array with the paths to the fields which will be stored (except the primary key) for each table in sequential order
- * @returns {Promise<IDBDatabase | null>} A promise which resolves to a IDBDatabase indicating a success or rejects to an event containing error info
+ * @param {Object[string]} primaryKeyPaths An array containing the names of the field which will serve as primary key for each table in sequential order
+ * @param {Object[Object[string]]} fieldKeyPaths An array containing an array with the paths to the fields which will be stored (except the primary key) for each table in sequential order
+ * @returns {Promise<IDBDatabase | Event>} A promise which resolves to a IDBDatabase indicating a success or rejects to an event containing error info
  */
 const openDb = async (dbName, tableNames, primaryKeyPaths, fieldKeyPaths) => {
     return new Promise((res, rej) => { 
 	    const dbObjectRequest = indexedDB.open(dbName);
 
-        dbObjectRequest.onerror = (event) => {
-            rej(event)
-        };
+        dbObjectRequest.onsuccess = (event) => {
+            rej(event.target.result)
+        }
 
         dbObjectRequest.onupgradeneeded = (event) => {
             const dbObject = event.target.result;
+
+            dbObject.onerror = (event) => {
+                return event
+            }
 
             tableNames.forEach((tableName, index) => {
                 _createTable(dbObject, tableName, primaryKeyPaths[index], fieldKeyPaths[index])
@@ -57,10 +61,10 @@ const createField = (dbTableObject, fieldKeyPath) => {
  * Selects data from a table stored in some database
  * @param {IDBDatabase} dbObject The database where the insert will be performed
  * @param {IDBObjectStore} tableName The name of the table where the insert will be perfomermed
- * @param {string} primaryKeyValue The value of the primary key field from record that wants to be selected
+ * @param {IDBValidKey | IDBKeyRange} selectValue The value of the primary key field from record that wants to be selected
  * @returns {Promise<Object | Event>} A promise which resolves to a the selected record indicating a success or rejects to an event containing error info
  */
-const select = (dbObject, tableName, primaryKeyValue) => {
+const select = (dbObject, tableName, selectValue) => {
     return new Promise((res, rej) => {
         const tx = _createTransaction(dbObject, tableName);
     
@@ -68,7 +72,7 @@ const select = (dbObject, tableName, primaryKeyValue) => {
             rej(event)
         }
 
-        const selectRequest = tx.objectStore(tableName).get(primaryKeyValue)
+        const selectRequest = tx.objectStore(tableName).getAll(selectValue)
 
         selectRequest.onsuccess = (_event) => {
             res(selectRequest.result)
@@ -80,8 +84,8 @@ const select = (dbObject, tableName, primaryKeyValue) => {
  * Inserts new data into a table stored in some databse
  * @param {IDBDatabase} dbObject The database where the insert will be performed
  * @param {IDBObjectStore} tableName The name of the table where the insert will be perfomermed
- * @param {Array<string>} key The fields or columns to be fulfield in sequential order
- * @param {Array<any>}  values The value of the fields or columns for the corresponding keys in sequential order
+ * @param {Object[string]} key The fields or columns to be fulfield in sequential order
+ * @param {Object[]}  values The value of the fields or columns for the corresponding keys in sequential order
  * @returns {Promise<boolean | Event>} A promise which resolves to a boolean indicating a success or rejects to an event containing error info
  */
 const insert = (dbObject, tableName, keys = [], values = []) => {
@@ -129,7 +133,7 @@ const _createTransaction = (dbObject, tableName, mode='readonly') => {
  * @param {IDBDatabase} dbObject The DB Object
  * @param {string} tableName The name of the table to be created
  * @param {string | null} primaryKeyPath The name of the field which will serve as primary key
- * @param {Array<string>} fieldKeyPaths An array containing the paths to the fields which will be stored (except the primary key)
+ * @param {Object[string]} fieldKeyPaths An array containing the paths to the fields which will be stored (except the primary key)
  * @returns {IDBObjectStore} The object representing the newly created table
  */
  const _createTable = (dbObject, tableName, primaryKeyPath = null, fieldKeyPaths = []) => {
