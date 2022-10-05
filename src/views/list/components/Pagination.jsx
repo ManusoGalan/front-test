@@ -4,25 +4,25 @@ const Pagination = ({ currentPage, currentPageSetter, numberOfPages }) => {
             case 0:
                 return (
                     <>
-                        <li class="page-item"><a class="page-link active" href="#" onClick={() => pageSetter(page)}>{(page + 1)}</a></li>
-                        <li class="page-item"><a class="page-link" href="#" onClick={() => pageSetter(page + 1)}>{(page + 1) + 1}</a></li>
-                        <li class="page-item"><a class="page-link" href="#" onClick={() => pageSetter(page + 2)}>{(page + 1) + 2}</a></li>
+                        <li className="page-item"><a className="page-link active" href="#" onClick={() => pageSetter(page)}>{(page + 1)}</a></li>
+                        <li className="page-item"><a className="page-link" href="#" onClick={() => pageSetter(page + 1)}>{(page + 1) + 1}</a></li>
+                        <li className="page-item"><a className="page-link" href="#" onClick={() => pageSetter(page + 2)}>{(page + 1) + 2}</a></li>
                     </>
                 )
             case numberOfPages:
                 return (
                     <>
-                        <li class="page-item"><a class="page-link" href="#" onClick={() => pageSetter(page - 2)}>{(page + 1) - 2}</a></li>
-                        <li class="page-item"><a class="page-link" href="#" onClick={() => pageSetter(page - 1)}>{(page + 1) - 1}</a></li>
-                        <li class="page-item"><a class="page-link active" href="#" onClick={() => pageSetter(page + 2)}>{(page + 1)}</a></li>
+                        <li className="page-item"><a className="page-link" href="#" onClick={() => pageSetter(page - 2)}>{(page + 1) - 2}</a></li>
+                        <li className="page-item"><a className="page-link" href="#" onClick={() => pageSetter(page - 1)}>{(page + 1) - 1}</a></li>
+                        <li className="page-item"><a className="page-link active" href="#" onClick={() => pageSetter(page + 2)}>{(page + 1)}</a></li>
                     </>
                 )
             default:
                 return (
                     <>
-                        <li class="page-item"><a class="page-link" href="#" onClick={() => pageSetter(page - 1)}>{(page + 1) - 1}</a></li>
-                        <li class="page-item"><a class="page-link active" href="#" onClick={() => pageSetter(page)}>{(page + 1)}</a></li>
-                        <li class="page-item"><a class="page-link" href="#" onClick={() => pageSetter(page + 1)}>{(page + 1) + 1}</a></li>
+                        <li className="page-item"><a className="page-link" href="#" onClick={() => pageSetter(page - 1)}>{(page + 1) - 1}</a></li>
+                        <li className="page-item"><a className="page-link active" href="#" onClick={() => pageSetter(page)}>{(page + 1)}</a></li>
+                        <li className="page-item"><a className="page-link" href="#" onClick={() => pageSetter(page + 1)}>{(page + 1) + 1}</a></li>
                     </>
                 )
                 break;
