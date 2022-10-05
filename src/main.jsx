@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client';
 
 import * as bootstrap from 'bootstrap';
 import 'bootstrap/scss/bootstrap.scss';
-import 'remixicon/fonts/remixicon.css'
+import 'bootstrap-icons/font/bootstrap-icons.scss'
 
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Header from './components/Header';
 import ProductList from './views/list/Main';
