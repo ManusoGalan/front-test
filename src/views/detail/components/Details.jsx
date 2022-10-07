@@ -1,4 +1,4 @@
-import DetailItem from './Detailitem';
+import DetailItem from './DetailItem';
 
 const Details = ({ productInfo }) => {
 	const { chipset, ram, os, displaySize, battery, primaryCamera, secondaryCmera, dimentions, weight } = productInfo;
