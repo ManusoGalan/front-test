@@ -1,8 +1,9 @@
+import { Form } from "react-router-dom";
 import OptionItem from "./OptionItem";
 
 const Options = ({ colorOptions, storageOptions }) => {
 	return (
-		<form>
+		<Form method="post" action="/">
 			<div className="d-flex mb-3">
 				<div className="w-50 me-3">
 					<p className="fs-5 text-primary fw-semibold">Color<br/>options</p>
@@ -25,7 +26,7 @@ const Options = ({ colorOptions, storageOptions }) => {
 			<button type="submit" className="btn btn-primary">
 				Add to cart
 			</button>
-		</form>
+		</Form>
 	);
 };
 
