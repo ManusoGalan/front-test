@@ -57,6 +57,24 @@ const routes = createBrowserRouter([
 			const json = await response.json();
 
 			localStorage.setItem(params.id, JSON.stringify(json))
+		},
+		action: async({ params, request }) => {
+			let formData = await request.formData();
+			
+			const response = await fetch('https://front-test-api.herokuapp.com/api/cart', {
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				body: JSON.stringify({
+					id: params.id,
+					colorCode: formData.get('color'),
+					storageCode: formData.get('storage')
+				})
+			});
+
+			const json = await response.json();
+			console.log(json)
 		}
 	}
 ]);

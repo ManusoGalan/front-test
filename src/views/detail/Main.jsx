@@ -15,7 +15,7 @@ const ProductDetails = () => {
                     <h1 className="text-secondary">{productInfo.brand} {productInfo.model}</h1>
                     <p className="fs-2 text-primary fw-bold">{productInfo.price}<span className="fs-4">€</span></p>
                     <Details productInfo={productInfo}></Details>
-                    <Options colorOptions={productInfo.options.colors} storageOptions={productInfo.options.storages}></Options>
+                    <Options productId={id} colorOptions={productInfo.options.colors} storageOptions={productInfo.options.storages}></Options>
                 </div>
             </div>
         </div>
