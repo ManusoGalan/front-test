@@ -30,7 +30,7 @@ const SearchBar = ({ database, table, searchSetter, itemSetter }) => {
 	return (
 		<div className="input-group mt-4">
 			<span className="input-group-text" id="search-icon">
-                <i class="bi bi-search"></i>
+                <i className="bi bi-search"></i>
 			</span>
 			<input type="text" className="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-icon" onInput={search} />
 		</div>
