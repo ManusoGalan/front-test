@@ -52,6 +52,12 @@ const routes = createBrowserRouter([
 	{
 		path: '/:id',
 		element: <ProductDetails />,
+		loader: async({ params }) => {
+			const response = await fetch(`https://front-test-api.herokuapp.com/api/product/${params.id}`);
+			const json = await response.json();
+
+			localStorage.setItem(params.id, JSON.stringify(json))
+		}
 	}
 ]);
 
