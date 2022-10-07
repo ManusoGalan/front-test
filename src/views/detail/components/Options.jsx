@@ -1,29 +1,17 @@
+import OptionItem from "./OptionItem";
+
 const Options = ({ colorOptions, storageOptions }) => {
 	return (
 		<form>
-			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+			<div className="btn-group" key={"btn-group-color"} role="group" aria-label="Basic radio toggle button group">
 				{colorOptions.map((colorOption, index) => {
-					return (
-						<>
-							<input type="radio" value={colorOption.code} className="btn-check" name="color" id={colorOption.name.toLowerCase()} autocomplete="off" checked={!index}/>
-							<label className="btn btn-outline-secondary" for={colorOption.name.toLowerCase()}>
-								{colorOption.name}
-							</label>
-						</>
-					);
+					return  <OptionItem key={`color-option-${colorOption.name.toLowerCase()}`} name={colorOption.name} radioGroupName="color" value={colorOption.value} isChecked={!index}></OptionItem>
 				})}
 			</div>
 
-			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+			<div className="btn-group" key="btn-group-storage" role="group" aria-label="Basic radio toggle button group">
 				{storageOptions.map((storageOption, index) => {
-					return (
-						<>
-							<input type="radio" value={storageOption.code} className="btn-check" name="storage" id={storageOption.name.toLowerCase()} autocomplete="off" checked={!index}/>
-							<label className="btn btn-outline-secondary" for={storageOption.name.toLowerCase()}>
-								{storageOption.name}
-							</label>
-						</>
-					);
+					return <OptionItem key={`storage-option-${storageOption.name.toLowerCase()}`} name={storageOption.name} radioGroupName="storage" value={storageOption.value} isChecked={!index}></OptionItem>
 				})}
 			</div>
 
