@@ -5,17 +5,19 @@ const Header = () => {
     const productsCount = useSelector((state) => state.products.count)
     const currentLocation = useLocation()
 
-    console.log(currentLocation)
-
     return (
         <>
-            <nav className="navbar navbar-light bg-light">
+            <nav className="navbar navbar-light bg-light px-5">
                 <Link className="navbar-brand mb-0 h1" to="/">
                     Navbar
                 </Link>
                 <Link className="cart position-relative d-inline-flex" to="#">
-                    <i className="bi bi-bag"></i>
-                    <span className="cart-basket d-flex align-items-center justify-content-center">
+                    <i class="bi bi-bag-fill fs-3 text-dark"></i>
+                    <span className="cart-basket position-absolute text-light fw-semibold mt-1" style={{ 
+                        transform: "translate(-50%, -50%)",
+                        left: "50%",
+                        top: "50%"
+                    }}>
                         {productsCount}
                     </span>
                 </Link>
