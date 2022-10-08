@@ -9,9 +9,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Cookies from 'universal-cookie';
 
-import Header from './components/Header';
 import ProductList from './views/list/Main';
 import ProductDetails from './views/detail/Main';
+import DefaultView from './views/Main';
 
 import { openDb, insert } from './utils/dbconnector';
 import { incrementByAmount } from './store/slices/counterSlice';
@@ -23,7 +23,7 @@ const cookies = new Cookies()
 const routes = createBrowserRouter([
 	{
 		path: '/',
-		element: <ProductList />,
+		element: <DefaultView><ProductList /></DefaultView>,
 		loader: async () => {
 			const DB_NAME = 'ProductsDB';
 			const DB_TABLE = 'products';
@@ -73,7 +73,7 @@ const routes = createBrowserRouter([
 	},
 	{
 		path: '/:id',
-		element: <ProductDetails />,
+		element: <DefaultView><ProductDetails /></DefaultView>,
 		loader: async({ params }) => {
 			if(cookies.get(params.id) === undefined) {
 				const response = await fetch(`https://front-test-api.herokuapp.com/api/product/${params.id}`);
@@ -110,8 +110,7 @@ const routes = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<Header />
-			<RouterProvider router={routes} />
+			<RouterProvider router={routes}/>
 		</Provider>
 	</React.StrictMode>
 );
