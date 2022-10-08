@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { loremIpsum } from "lorem-ipsum";
+
 import { select } from '../../utils/dbconnector';
 import Pagination from './components/Pagination';
 import ProductItem from './components/ProductItem';
@@ -26,7 +28,7 @@ const ProductList = () => {
 			<SearchBar database={database} table={table} searchSetter={setIsSearching} itemSetter={setItems}></SearchBar>
 			<div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-2 mb-4">
 				{items.map((item) => (
-					<ProductItem key={item.id} itemImg={item.imgUrl} itemName={item.model} itemDescription={item.brand} itemLink={item.id} />
+					<ProductItem key={item.id} itemImg={item.imgUrl} itemName={`${item.brand} ${item.model}`} itemDescription={loremIpsum()} itemLink={item.id} />
 				))}
 			</div>
 			{!isSearching ? <Pagination currentPage={page} currentPageSetter={setPage} numberOfPages={12}></Pagination> : ''}
