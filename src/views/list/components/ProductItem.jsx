@@ -5,10 +5,12 @@ const ProductItem = ({itemImg, itemName, itemDescription, itemLink}) => {
         <div className="col">
             <div className="card h-100">
                 <img src={itemImg} className="card-img-top p-3" alt={itemName} />
-                <div className="card-body d-flex flex-column justify-content-end">
-                    <h5 className="card-title">{itemName}</h5>
-                    <p className="card-text">{itemDescription}</p>
-                    <Link to={itemLink} className="btn btn-primary">
+                <div className="card-body d-flex flex-column">
+                    <h5 className="card-title text-center">{itemName}</h5>
+                    <p className="fs-3 text-primary fw-bold text-center card-text">
+                        <span className="fs-5">from</span> {itemDescription !== "" ? itemDescription : "-"}<span className="fs-5">€</span>
+                    </p>
+                    <Link to={itemLink} className="btn btn-primary stretched-link mt-auto">
                         View more
                     </Link>
                 </div>
