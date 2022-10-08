@@ -13,6 +13,7 @@ import ProductList from './views/list/Main';
 import ProductDetails from './views/detail/Main';
 
 import { openDb, insert } from './utils/dbconnector';
+import { incrementByAmount } from './store/slices/counterSlice';
 import store from './store/main';
 
 const routes = createBrowserRouter([
@@ -76,7 +77,7 @@ const routes = createBrowserRouter([
 			});
 
 			const json = await response.json();
-			console.log(json)
+			store.dispatch(incrementByAmount(json.count))
 		}
 	}
 ]);
