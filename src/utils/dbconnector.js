@@ -10,8 +10,12 @@ const openDb = async (dbName, tableNames, primaryKeyPaths, fieldKeyPaths) => {
     return new Promise((res, rej) => { 
 	    const dbObjectRequest = indexedDB.open(dbName);
 
+        dbObjectRequest.onerror = (event) => {
+            rej(error);
+        }
+
         dbObjectRequest.onsuccess = (event) => {
-            rej(event.target.result)
+            res(event.target.result)
         }
 
         dbObjectRequest.onupgradeneeded = (event) => {
@@ -81,23 +85,24 @@ const select = (dbObject, tableName, selectValue) => {
 }
 
 /**
- * Inserts new data into a table stored in some databse
+ * Inserts new data into a table stored in some database
  * @param {IDBDatabase} dbObject The database where the insert will be performed
  * @param {IDBObjectStore} tableName The name of the table where the insert will be perfomermed
  * @param {Object[string]} key The fields or columns to be fulfield in sequential order
  * @param {Object[]}  values The value of the fields or columns for the corresponding keys in sequential order
- * @returns {Promise<boolean | Event>} A promise which resolves to a boolean indicating a success or rejects to an event containing error info
+ * @returns {Promise<boolean | Event>} A promise which resolves in case of success or rejects in case of error
  */
 const insert = (dbObject, tableName, keys = [], values = []) => {
     return new Promise((res, rej) => {
         const tx = _createTransaction(dbObject, tableName, 'readwrite')
-
-        tx.oncomplete = () => {
-            res(true)
-        }
     
-        tx.onerror = (event) => {
-            rej(event)
+        tx.onerror = async (event) => {
+            try {
+                await remove(dbObject, tableName, values[0])
+                res(await insert(dbObject, tableName, keys, values))
+            } catch(error) {
+                rej(error)
+            }
         }
     
         const newRow = {}
@@ -105,12 +110,35 @@ const insert = (dbObject, tableName, keys = [], values = []) => {
             newRow[key] = values[index];
         })
     
-        tx.objectStore(tableName).add(newRow);
+        const objectStoreReq = tx.objectStore(tableName).add(newRow);
+
+        objectStoreReq.onsuccess = (event) => {
+            res(event)
+        }
     })
 }
 
-const remove = (dbObject, dbTableObject) => {
+/**
+ * Deletes a row from a table stored in some databse
+ * @param {IDBDatabase} dbObject The database where the deletion will be performed
+ * @param {IDBObjectStore} tableName The name of the table where the deletion will be perfomermed
+ * @param {string} primaryKey The primary of the row to be deleted
+ * @returns {Promise<Event>} A promise which resolves in case of success or rejects in case of error
+ */
+const remove = (dbObject, tableName, primaryKey) => {
+    return new Promise((res, rej) => {
+        const tx = _createTransaction(dbObject, tableName, 'readwrite')
+    
+        tx.onerror = (event) => {
+            rej(event)
+        }
 
+        tx.oncomplete = (event) => {
+            res(event)
+        }
+    
+        tx.objectStore(tableName).delete(primaryKey);
+    })
 }
 
 const update = (dbObject, dbTableObject) => {

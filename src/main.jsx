@@ -36,13 +36,19 @@ const routes = createBrowserRouter([
 					const response = await fetch('https://front-test-api.herokuapp.com/api/product');
 					const json = await response.json();
 	
-				json.forEach((resObject, index) => {
-					insert(
+					json.forEach(async (resObject, index) => {
+						try {
+							await insert(
 								dbObject,
 								DB_TABLE,
 								TABLE_FIELDS,
 								[index, ...TABLE_FIELDS.slice(1).map((field) => resObject[field])]
 							);
+						} catch (error) {
+							console.error('Error while creating and/or interacting with databse. See the error below for more information');
+							console.error(error);
+						}
+						
 					});
 
 					cookies.set(DB_NAME, true, {
