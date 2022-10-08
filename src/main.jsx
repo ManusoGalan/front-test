@@ -6,12 +6,14 @@ import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap-icons/font/bootstrap-icons.scss'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import Header from './components/Header';
 import ProductList from './views/list/Main';
 import ProductDetails from './views/detail/Main';
 
 import { openDb, insert } from './utils/dbconnector';
+import store from './store/main';
 
 const routes = createBrowserRouter([
 	{
@@ -81,7 +83,9 @@ const routes = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
-		<Header />
-		<RouterProvider router={routes} />
+		<Provider store={store}>
+			<Header />
+			<RouterProvider router={routes} />
+		</Provider>
 	</React.StrictMode>
 );
