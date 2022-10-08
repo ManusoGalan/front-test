@@ -16,7 +16,7 @@ const SearchBar = ({ database, table, searchSetter, itemSetter }) => {
                 filteredItems = filteredItems.filter((item) => {
                     let matchesSearchedTerms = false;
 
-                    if (item.model.toLowerCase().match(new RegExp(`(${searchTerm})`)) || item.brand.toLowerCase().match(new RegExp(`(${searchTerm})`)))
+                    if (item.model.toLowerCase().match(new RegExp(`(${searchTerm.toLowerCase()})`)) || item.brand.toLowerCase().match(new RegExp(`(${searchTerm.toLowerCase()})`)))
                         matchesSearchedTerms = true;
 
                     return matchesSearchedTerms;
