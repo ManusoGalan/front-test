@@ -14,7 +14,6 @@
     "bootstrap": "^5.2.1",
     "bootstrap-icons": "^1.9.1",
     "localforage": "^1.10.0",
-    "lorem-ipsum": "^2.0.8",
     "match-sorter": "^6.3.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
