@@ -14,5 +14,15 @@ export default defineConfig({
     port: 8080,
     hot: true
   },
+  eesbuild: {
+    loader: 'jsx',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
   plugins: [react()]
 })
