@@ -12,7 +12,7 @@ const Header = () => {
                     Navbar
                 </Link>
                 <Link className="cart position-relative d-inline-flex" to="#">
-                    <i class="bi bi-bag-fill fs-3 text-dark"></i>
+                    <i className="bi bi-bag-fill fs-3 text-dark"></i>
                     <span className="cart-basket position-absolute text-light fw-semibold mt-1" style={{ 
                         transform: "translate(-50%, -50%)",
                         left: "50%",
@@ -30,7 +30,7 @@ const Header = () => {
                             [...new Set(currentLocation.pathname.split('/'))].map((locationPart, index, locationParts) => {
                                 switch (locationPart) {
                                     case "":
-                                        return locationParts.length === index + 1 ? <li className="breadcrumb-item active" aria-current="page"><i class="bi bi-house-fill"></i></li> : <li class="breadcrumb-item"><Link to={"/"}><i class="bi bi-house-fill"></i></Link></li>
+                                        return locationParts.length === index + 1 ? <li className="breadcrumb-item active" aria-current="page"><i className="bi bi-house-fill"></i></li> : <li className="breadcrumb-item"><Link to={"/"}><i className="bi bi-house-fill"></i></Link></li>
                                     default:
                                         const currentItem = JSON.parse(localStorage.getItem(locationPart));
                                         return <li className="breadcrumb-item active" aria-current="page">{`${currentItem.brand} ${currentItem.model}`}</li>
