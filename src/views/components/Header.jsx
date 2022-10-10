@@ -9,7 +9,7 @@ const Header = () => {
         <>
             <nav className="navbar navbar-light bg-light px-5">
                 <Link className="navbar-brand mb-0 h1" to="/">
-                    Navbar
+                    The Phone Home
                 </Link>
                 <Link className="cart position-relative d-inline-flex" to="#">
                     <i className="bi bi-bag-fill fs-3 text-dark"></i>
