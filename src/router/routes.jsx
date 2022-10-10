@@ -7,6 +7,7 @@ import DefaultView from '../views/Main';
 
 import { openDb, insert } from '../utils/dbconnector';
 import { incrementByAmount } from '../store/slices/counterSlice';
+import store from '../store/main';
 
 const homeLoader = async () => {
     const cookies = new Cookies();
@@ -103,3 +104,4 @@ const routes = [{
 }]
 
 export default routes
+export { homeLoader, productLoader, productActuator }
