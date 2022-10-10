@@ -44,7 +44,7 @@ const ProductList = () => {
             key={item.id}
             itemImg={item.imgUrl}
             itemName={`${item.brand} ${item.model}`}
-            itemDescription={item.price}
+            itemPrice={item.price}
             itemLink={item.id}
           />
         ))}
