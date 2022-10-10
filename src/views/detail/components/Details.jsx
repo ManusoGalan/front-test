@@ -6,10 +6,10 @@ const Details = ({ productInfo }) => {
 	return (
 		<div className="w-100">
 			<div className="row row-cols-2 g-3 align-items-stretch mb-3">
-				<DetailItem property="Dimesions" icon="bi-phone" content={dimentions.split('(')[0].trim()}></DetailItem>
+				<DetailItem property="Dimesions" icon="bi-phone" content={dimentions}></DetailItem>
 				<DetailItem property="Weight" icon="bi-box" content={`${weight} gr`}></DetailItem>
-				<DetailItem property="Resolution" icon="bi-fullscreen" content={displaySize.split('(')[0].trim()}></DetailItem>
-				<DetailItem property="OS" icon="bi-disc" content={os.split('(')[0].trim()}></DetailItem>
+				<DetailItem property="Resolution" icon="bi-fullscreen" content={displaySize}></DetailItem>
+				<DetailItem property="OS" icon="bi-disc" content={os}></DetailItem>
 				<DetailItem property="CPU" icon="bi-cpu" content={chipset}></DetailItem>
 				<DetailItem property="RAM" icon="bi-memory" content={ram}></DetailItem>
 				<div className="col">
