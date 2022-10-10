@@ -1,40 +1,70 @@
-import { select } from '../../../utils/dbconnector';
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import { select } from '../../../utils/dbconnector'
 
 const SearchBar = ({ database, table, searchSetter, itemSetter }) => {
-	const search = (event) => {
-		select(database, table, IDBKeyRange.bound(0, Number.MAX_VALUE)).then((allItems) => {
-			const searchTerms = event.target.value.trim() === '' ? [] : event.target.value.trim().split(' ');
-            let filteredItems = allItems;
+  const search = (event) => {
+    select(database, table, IDBKeyRange.bound(0, Number.MAX_VALUE)).then(
+      (allItems) => {
+        const searchTerms =
+          event.target.value.trim() === ''
+            ? []
+            : event.target.value.trim().split(' ')
+        let filteredItems = allItems
 
-            if(searchTerms.length) {
-                searchSetter(true)
-            } else {
-                searchSetter(false)
+        if (searchTerms.length) {
+          searchSetter(true)
+        } else {
+          searchSetter(false)
+        }
+
+        for (const searchTerm of searchTerms) {
+          filteredItems = filteredItems.filter((item) => {
+            let matchesSearchedTerms = false
+
+            if (
+              item.model
+                .toLowerCase()
+                .match(new RegExp(`(${searchTerm.toLowerCase()})`)) ||
+              item.brand
+                .toLowerCase()
+                .match(new RegExp(`(${searchTerm.toLowerCase()})`))
+            ) {
+              matchesSearchedTerms = true
             }
 
-			for (const searchTerm of searchTerms) {
-                filteredItems = filteredItems.filter((item) => {
-                    let matchesSearchedTerms = false;
+            return matchesSearchedTerms
+          })
+        }
 
-                    if (item.model.toLowerCase().match(new RegExp(`(${searchTerm.toLowerCase()})`)) || item.brand.toLowerCase().match(new RegExp(`(${searchTerm.toLowerCase()})`)))
-                        matchesSearchedTerms = true;
+        itemSetter(filteredItems)
+      }
+    )
+  }
 
-                    return matchesSearchedTerms;
-                });
-			}
+  return (
+    <div className="input-group mt-4">
+      <span className="input-group-text" id="search-icon">
+        <i className="bi bi-search"></i>
+      </span>
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Search..."
+        aria-label="Search"
+        aria-describedby="search-icon"
+        onInput={search}
+      />
+    </div>
+  )
+}
 
-            itemSetter(filteredItems)
-		});
-	};
+SearchBar.propTypes = {
+  database: PropTypes.object,
+  table: PropTypes.string,
+  searchSetter: PropTypes.func,
+  itemSetter: PropTypes.func
+}
 
-	return (
-		<div className="input-group mt-4">
-			<span className="input-group-text" id="search-icon">
-                <i className="bi bi-search"></i>
-			</span>
-			<input type="text" className="form-control" placeholder="Search..." aria-label="Search" aria-describedby="search-icon" onInput={search} />
-		</div>
-	);
-};
-
-export default SearchBar;
+export default SearchBar

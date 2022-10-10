@@ -1,17 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    count: 0
+  count: 0
 }
 
 const productsSlice = createSlice({
-    name: 'products',
-    initialState: initialState,
-    reducers: {
-        incrementByAmount: (state, action) => {
-            state.count += action.payload
-        }
+  name: 'products',
+  initialState,
+  reducers: {
+    incrementByAmount: (state, action) => {
+      state.count += action.payload
     }
+  }
 })
 
 export const { incrementByAmount } = productsSlice.actions

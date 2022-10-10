@@ -7,32 +7,37 @@
  * @returns {Promise<IDBDatabase | Event>} A promise which resolves to a IDBDatabase indicating a success or rejects to an event containing error info
  */
 const openDb = async (dbName, tableNames, primaryKeyPaths, fieldKeyPaths) => {
-    return new Promise((res, rej) => { 
-	    const dbObjectRequest = indexedDB.open(dbName);
+  return new Promise((resolve, reject) => {
+    const dbObjectRequest = indexedDB.open(dbName)
 
-        dbObjectRequest.onerror = (event) => {
-            rej(error);
-        }
+    dbObjectRequest.onerror = (event) => {
+      reject(event)
+    }
 
-        dbObjectRequest.onsuccess = (event) => {
-            res(event.target.result)
-        }
+    dbObjectRequest.onsuccess = (event) => {
+      resolve(event.target.result)
+    }
 
-        dbObjectRequest.onupgradeneeded = (event) => {
-            const dbObject = event.target.result;
+    dbObjectRequest.onupgradeneeded = (event) => {
+      const dbObject = event.target.result
 
-            dbObject.onerror = (event) => {
-                return event
-            }
+      dbObject.onerror = (event) => {
+        return event
+      }
 
-            tableNames.forEach((tableName, index) => {
-                _createTable(dbObject, tableName, primaryKeyPaths[index], fieldKeyPaths[index])
-            })
+      tableNames.forEach((tableName, index) => {
+        _createTable(
+          dbObject,
+          tableName,
+          primaryKeyPaths[index],
+          fieldKeyPaths[index]
+        )
+      })
 
-            res(dbObject)
-        }
-    })
-};
+      resolve(dbObject)
+    }
+  })
+}
 
 /**
  * Drops a table from the database object passed as argument
@@ -40,8 +45,8 @@ const openDb = async (dbName, tableNames, primaryKeyPaths, fieldKeyPaths) => {
  * @param {string} tableName The name of the table to be dropped
  */
 const dropTable = (dbObject, tableName) => {
-	dbObject.deleteObjectStore(tableName);
-};
+  dbObject.deleteObjectStore(tableName)
+}
 
 /**
  * Creates a new field in the table passed as argument
@@ -49,7 +54,7 @@ const dropTable = (dbObject, tableName) => {
  * @param {string} fieldKeyPath The path to the field which will be stored
  */
 const createField = (dbTableObject, fieldKeyPath) => {
-    dbTableObject.createIndex(fieldKeyPath, fieldKeyPath)
+  dbTableObject.createIndex(fieldKeyPath, fieldKeyPath)
 }
 
 /**
@@ -57,8 +62,8 @@ const createField = (dbTableObject, fieldKeyPath) => {
  * @param {IDBObjectStore} dbTableObject The table in which the new field will be created
  * @param {string} fieldKeyPath The path to the field which will be stored
  */
- const dropField = (dbTableObject, fieldKeyPath) => {
-    dbTableObject.deleteIndex(fieldKeyPath)
+const dropField = (dbTableObject, fieldKeyPath) => {
+  dbTableObject.deleteIndex(fieldKeyPath)
 }
 
 /**
@@ -69,19 +74,19 @@ const createField = (dbTableObject, fieldKeyPath) => {
  * @returns {Promise<Object | Event>} A promise which resolves to a the selected record indicating a success or rejects to an event containing error info
  */
 const select = (dbObject, tableName, selectValue) => {
-    return new Promise((res, rej) => {
-        const tx = _createTransaction(dbObject, tableName);
-    
-        tx.onerror = (event) => {
-            rej(event)
-        }
+  return new Promise((resolve, reject) => {
+    const tx = _createTransaction(dbObject, tableName)
 
-        const selectRequest = tx.objectStore(tableName).getAll(selectValue)
+    tx.onerror = (event) => {
+      reject(event)
+    }
 
-        selectRequest.onsuccess = (_event) => {
-            res(selectRequest.result)
-        } 
-    })
+    const selectRequest = tx.objectStore(tableName).getAll(selectValue)
+
+    selectRequest.onsuccess = (_event) => {
+      resolve(selectRequest.result)
+    }
+  })
 }
 
 /**
@@ -93,29 +98,29 @@ const select = (dbObject, tableName, selectValue) => {
  * @returns {Promise<boolean | Event>} A promise which resolves in case of success or rejects in case of error
  */
 const insert = (dbObject, tableName, keys = [], values = []) => {
-    return new Promise((res, rej) => {
-        const tx = _createTransaction(dbObject, tableName, 'readwrite')
-    
-        tx.onerror = async (event) => {
-            try {
-                await remove(dbObject, tableName, values[0])
-                res(await insert(dbObject, tableName, keys, values))
-            } catch(error) {
-                rej(error)
-            }
-        }
-    
-        const newRow = {}
-        keys.forEach((key, index) => {
-            newRow[key] = values[index];
-        })
-    
-        const objectStoreReq = tx.objectStore(tableName).add(newRow);
+  return new Promise((resolve, reject) => {
+    const tx = _createTransaction(dbObject, tableName, 'readwrite')
 
-        objectStoreReq.onsuccess = (event) => {
-            res(event)
-        }
+    tx.onerror = async (event) => {
+      try {
+        await remove(dbObject, tableName, values[0])
+        resolve(await insert(dbObject, tableName, keys, values))
+      } catch (error) {
+        reject(error)
+      }
+    }
+
+    const newRow = {}
+    keys.forEach((key, index) => {
+      newRow[key] = values[index]
     })
+
+    const objectStoreReq = tx.objectStore(tableName).add(newRow)
+
+    objectStoreReq.onsuccess = (event) => {
+      resolve(event)
+    }
+  })
 }
 
 /**
@@ -126,23 +131,23 @@ const insert = (dbObject, tableName, keys = [], values = []) => {
  * @returns {Promise<Event>} A promise which resolves in case of success or rejects in case of error
  */
 const remove = (dbObject, tableName, primaryKey) => {
-    return new Promise((res, rej) => {
-        const tx = _createTransaction(dbObject, tableName, 'readwrite')
-    
-        tx.onerror = (event) => {
-            rej(event)
-        }
+  return new Promise((resolve, reject) => {
+    const tx = _createTransaction(dbObject, tableName, 'readwrite')
 
-        tx.oncomplete = (event) => {
-            res(event)
-        }
-    
-        tx.objectStore(tableName).delete(primaryKey);
-    })
+    tx.onerror = (event) => {
+      reject(event)
+    }
+
+    tx.oncomplete = (event) => {
+      resolve(event)
+    }
+
+    tx.objectStore(tableName).delete(primaryKey)
+  })
 }
 
 const update = (dbObject, dbTableObject) => {
-
+  throw new Error('Method not implemented')
 }
 
 /**
@@ -152,8 +157,8 @@ const update = (dbObject, dbTableObject) => {
  * @param {string | null} mode The mode in which the transaction will be performed ('readonly' or 'readwrite')
  * @returns {IDBTransaction} The transaction object
  */
-const _createTransaction = (dbObject, tableName, mode='readonly') => {
-    return dbObject.transaction(tableName, mode)
+const _createTransaction = (dbObject, tableName, mode = 'readonly') => {
+  return dbObject.transaction(tableName, mode)
 }
 
 /**
@@ -164,15 +169,21 @@ const _createTransaction = (dbObject, tableName, mode='readonly') => {
  * @param {Object[string]} fieldKeyPaths An array containing the paths to the fields which will be stored (except the primary key)
  * @returns {IDBObjectStore} The object representing the newly created table
  */
- const _createTable = (dbObject, tableName, primaryKeyPath = null, fieldKeyPaths = []) => {
-	const dbTableObject = primaryKeyPath ? dbObject.createObjectStore(tableName, { keyPath: primaryKeyPath }) : dbObject.createObjectStore(tableName);
+const _createTable = (
+  dbObject,
+  tableName,
+  primaryKeyPath = null,
+  fieldKeyPaths = []
+) => {
+  const dbTableObject = primaryKeyPath
+    ? dbObject.createObjectStore(tableName, { keyPath: primaryKeyPath })
+    : dbObject.createObjectStore(tableName)
 
-    fieldKeyPaths.forEach((fieldKeyPath) => {
-        dbTableObject.createIndex(fieldKeyPath, fieldKeyPath)
-    })
+  fieldKeyPaths.forEach((fieldKeyPath) => {
+    dbTableObject.createIndex(fieldKeyPath, fieldKeyPath)
+  })
 
-    return dbTableObject;
-};
+  return dbTableObject
+}
 
-
-export { openDb, dropTable, createField, dropField, select, insert };
+export { openDb, dropTable, createField, dropField, select, insert, update }

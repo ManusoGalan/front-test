@@ -1,12 +1,19 @@
-import Header from "./components/Header"
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const DefaultView = ({children}) => {
-    return (
-        <>
-            <Header />
-            {children}
-        </>
-    )
+import Header from './components/Header'
+
+const DefaultView = ({ children }) => {
+  return (
+    <>
+      <Header />
+      {children}
+    </>
+  )
+}
+
+DefaultView.propTypes = {
+  children: PropTypes.elementType
 }
 
 export default DefaultView
