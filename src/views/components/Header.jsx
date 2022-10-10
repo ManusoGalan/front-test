@@ -2,6 +2,7 @@ import React from 'react'
 
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
+import Breadcrumb from './Breadcrumb'
 
 const Header = () => {
   const productsCount = useSelector((state) => state.products.count)
@@ -35,32 +36,28 @@ const Header = () => {
               (locationPart, index, locationParts) => {
                 switch (locationPart) {
                   case '': {
-                    return locationParts.length === index + 1
-                      ? (
-                      <li
-                        className="breadcrumb-item active"
-                        aria-current="page"
-                      >
-                        <i className="bi bi-house-fill"></i>
-                      </li>
-                        )
-                      : (
-                      <li className="breadcrumb-item">
-                        <Link to={'/'}>
-                          <i className="bi bi-house-fill"></i>
-                        </Link>
-                      </li>
-                        )
+                    return (
+                      locationParts.length === index + 1
+                        ? (
+                            <Breadcrumb key="home-breadcrumb" isActive={false} linkPath={'/'}>
+                              <i className="bi bi-house-fill"></i>
+                            </Breadcrumb>
+                          )
+                        : (
+                            <Breadcrumb key="home-breadcrumb" isActive={true} linkPath={'/'}>
+                              <i className="bi bi-house-fill"></i>
+                            </Breadcrumb>
+                          )
+                    )
                   }
                   default: {
                     const currentItem = JSON.parse(
                       localStorage.getItem(locationPart)
                     )
                     return (
-                      <li
-                        className="breadcrumb-item active"
-                        aria-current="page"
-                      >{`${currentItem.brand} ${currentItem.model}`}</li>
+                      <Breadcrumb key="product-breadcrumb" isActive={false} linkPath={'/'}>
+                        {`${currentItem.brand} ${currentItem.model}`}
+                      </Breadcrumb>
                     )
                   }
                 }
