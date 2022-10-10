@@ -13,7 +13,7 @@ const DefaultView = ({ children }) => {
 }
 
 DefaultView.propTypes = {
-  children: PropTypes.elementType
+  children: PropTypes.element
 }
 
 export default DefaultView

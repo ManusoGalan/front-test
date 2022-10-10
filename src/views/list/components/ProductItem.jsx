@@ -30,7 +30,7 @@ const ProductItem = ({ itemImg, itemName, itemPrice, itemLink }) => {
 ProductItem.propTypes = {
   itemImg: PropTypes.string,
   itemName: PropTypes.string,
-  itemPrice: PropTypes.number,
+  itemPrice: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   itemLink: PropTypes.string
 }
 
